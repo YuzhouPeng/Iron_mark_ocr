@@ -1,11 +1,14 @@
-import os,time
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import os
+import time
 import cv2
 import numpy as np
 
 path = 'D:\\xianggang\\xianggang\\'
 
 testimgpath = 'D:\\xianggang\\xianggang\\190707\\190707\\1.jpg'
-srcpath = 'D:\\xianggang\\xianggang\\mianpeng200103\\200103\\'
+srcpath = 'D:\\xianggang\\xianggang\\190707\\11'
 resultpath = 'D:\\pics'
 def morphologyEx(src):
     """
@@ -17,10 +20,13 @@ def morphologyEx(src):
 
     #设置卷积核
     kernel = np.ones((5,5), np.uint8)
+    time0 = time.time()
 
     #图像顶帽运算
     result = cv2.morphologyEx(src, cv2.MORPH_TOPHAT, kernel)
-
+    time1 = time.time()
+    total = (time1 - time0)
+    print ("morphologyEx need time: {} s".format(total))
     # #显示图像
     # cv2.imshow("src", src)
     # cv2.imshow("result", result)
@@ -36,17 +42,17 @@ def otsu(src):
     :param img:
     :return img:
     """
-	gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
 	
-	time0 = time.time()
-	retval, dst = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)
-	time1 = time.time()
-	total = (time1 - time0)
-	print ("otsu need time: {} s".format(total))
+    time0 = time.time()
+    retval, dst = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)
+    time1 = time.time()
+    total = (time1 - time0)
+    print ("otsu need time: {} s".format(total))
  
-	cv2.imshow("src", src)
-	cv2.imshow("gray", gray)
-	cv2.imshow("dst", dst)
+    cv2.imshow("src", src)
+    cv2.imshow("gray", gray)
+    cv2.imshow("dst", dst)
     return dst
 
 def iter(src):
@@ -134,6 +140,9 @@ def segment(img):
         return th
     img = max_entropy_segmentation(img)
     return img
+
+
+
 
 
 
