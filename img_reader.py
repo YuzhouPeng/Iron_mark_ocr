@@ -8,8 +8,10 @@ import numpy as np
 path = 'D:\\xianggang\\xianggang\\'
 
 testimgpath = 'D:\\xianggang\\xianggang\\190707\\190707\\1.jpg'
-srcpath = 'D:\\xianggang\\xianggang\\190707\\11'
+srcpath = 'D:\\xianggang\\xianggang\\190707\\190707'
 resultpath = 'D:\\pics'
+rpath = 'D:\\pics_fault'
+
 def morphologyEx(src):
     """
     #顶帽变换,增强图像中低对比度的目标
@@ -43,7 +45,6 @@ def otsu(src):
     :return img:
     """
     gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
-	
     time0 = time.time()
     retval, dst = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)
     time1 = time.time()
@@ -55,20 +56,22 @@ def otsu(src):
     cv2.imshow("dst", dst)
     return dst
 
-def iter(src):
+def iters(src):
     """
     #迭代法选择阈值
     :param img:
     :return img:
     """
     gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
-    print(gray)
+    # print(gray)
     zmax = max(gray)
     zmin = min(gray)
     tk = (zmax+zmin)/2
     b = 1
     m = len(gray)
     n = len(gray[0])
+    time0 = time.time()
+
     while b:
         ifg = 0
         ibg = 0
@@ -90,6 +93,9 @@ def iter(src):
         else:
             tk = int((zo+zb)/2)
     ret,thresh1 = cv2.threshold(img,tk,255,cv2.THRESH_BINARY)
+    time1 = time.time()
+    total = (time1 - time0)
+    print ("iter need time: {} s".format(total))
     return thresh1
 
 
@@ -131,12 +137,17 @@ def segment(img):
         hist = np.reshape(hist, [-1])
         max_ent = 0.
         max_index = 0
+        time0 = time.time()
+
         for i in range(256):
             cur_ent = calculate_current_entropy(hist, i)
             if cur_ent > max_ent:
                 max_ent = cur_ent
                 max_index = i
         ret, th = cv2.threshold(img, max_index, 255, cv2.THRESH_BINARY)
+        time1 = time.time()
+        total = (time1 - time0)
+        print ("iter need time: {} s".format(total))
         return th
     img = max_entropy_segmentation(img)
     return img
@@ -147,9 +158,22 @@ def segment(img):
 
 
 if __name__ == "__main__":
-    for parent,_,files in os.walk(srcpath):
+    # for parent,_,files in os.walk(srcpath):
+    #     for file in files:
+    #         src = cv2.imread(os.path.join(parent,file))
+    #         result = morphologyEx(src)
+    #         cv2.imwrite(rpath+file,result)
+
+    for parent,_,files in os.walk(rpath):
         for file in files:
-            src = cv2.imread(os.path.join(parent,file), cv2.IMREAD_UNCHANGED)
-            result = morphologyEx(src)
-            
-            cv2.imwrite(resultpath+"/"+file,result)
+            #, cv2.IMREAD_UNCHANGED
+            src = cv2.imread(os.path.join(parent,file))
+            # result = morphologyEx(src)
+            otsuresult = otsu(src)
+            cv2.imwrite(resultpath+"/otsu/"+file,otsuresult)
+
+            # iterresult = iters(src)
+            # cv2.imwrite(resultpath+"/iter/"+file,iterresult)
+
+            # maxentropyresult = segment(src)
+            # cv2.imwrite(resultpath+"/max/"+file,maxentropyresult)
