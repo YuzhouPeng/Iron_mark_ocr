@@ -160,6 +160,8 @@ def cut_chars():
     print(w)
     a = [0 for z in range(0, w)] 
     a1 = [0 for z in range(0, h)]
+    npa = np.asarray(thresh1, dtype=np.int)
+
     # print(h)
     # print(w)
     # print(h,w)#s输出高和宽
@@ -168,7 +170,7 @@ def cut_chars():
     #记录每一列的波峰
     for j in range(0,w): #遍历一列 
         for i in range(0,h):  #遍历一行
-            if  thresh1[i,j]==255:  #如果改点为黑点
+            if  npa[i,j]==255:  #如果改点为黑点
                 a[j]+=1  		#该列的计数器加一计数
                 a1[i]+=1
                 # thresh1[i,j]=255  #记录完后将其变为白色 
