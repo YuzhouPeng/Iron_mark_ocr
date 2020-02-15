@@ -64,8 +64,8 @@ def iters(src):
     """
     gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
     # print(gray)
-    zmax = max(gray)
-    zmin = min(gray)
+    zmax = max(map(max, gray))
+    zmin = min(map(min, gray))
     tk = (zmax+zmin)/2
     b = 1
     m = len(gray)
@@ -79,7 +79,7 @@ def iters(src):
         bnum = 0
         for i in range(1,m):
             for j in range(1,n):
-                tmp = grey[i][j]
+                tmp = gray[i][j]
                 if tmp>=tk:
                     ifg=ifg+1
                     fnum = fnum+tmp
@@ -92,7 +92,7 @@ def iters(src):
             b = 0
         else:
             tk = int((zo+zb)/2)
-    ret,thresh1 = cv2.threshold(img,tk,255,cv2.THRESH_BINARY)
+    ret,thresh1 = cv2.threshold(gray,tk,255,cv2.THRESH_BINARY)
     time1 = time.time()
     total = (time1 - time0)
     print ("iter need time: {} s".format(total))
@@ -162,18 +162,18 @@ if __name__ == "__main__":
     #     for file in files:
     #         src = cv2.imread(os.path.join(parent,file))
     #         result = morphologyEx(src)
-    #         cv2.imwrite(rpath+file,result)
+    #         cv2.imwrite(rpath+"/"+file,result)
 
     for parent,_,files in os.walk(rpath):
         for file in files:
             #, cv2.IMREAD_UNCHANGED
             src = cv2.imread(os.path.join(parent,file))
             # result = morphologyEx(src)
-            otsuresult = otsu(src)
-            cv2.imwrite(resultpath+"/otsu/"+file,otsuresult)
+            # otsuresult = otsu(src)
+            # cv2.imwrite(resultpath+"/otsu/"+file,otsuresult)
 
             # iterresult = iters(src)
             # cv2.imwrite(resultpath+"/iter/"+file,iterresult)
 
-            # maxentropyresult = segment(src)
-            # cv2.imwrite(resultpath+"/max/"+file,maxentropyresult)
+            maxentropyresult = segment(src)
+            cv2.imwrite(resultpath+"/max/"+file,maxentropyresult)
