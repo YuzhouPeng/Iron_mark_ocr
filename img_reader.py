@@ -8,7 +8,7 @@ import numpy as np
 path = 'D:\\xianggang\\xianggang\\'
 
 testimgpath = 'D:\\xianggang\\xianggang\\190707\\190707\\1.jpg'
-srcpath = 'D:\\xianggang\\xianggang\\190707\\190707'
+srcpath = 'D:\\xianggang\\xianggang\\mianpeng200103\\200103'
 resultpath = 'D:\\pics'
 rpath = 'D:\\pics_fault'
 
@@ -70,6 +70,8 @@ def iters(src):
     b = 1
     m = len(gray)
     n = len(gray[0])
+    print(m)
+    print(n)
     time0 = time.time()
 
     while b:
@@ -164,16 +166,16 @@ if __name__ == "__main__":
     #         result = morphologyEx(src)
     #         cv2.imwrite(rpath+"/"+file,result)
 
-    for parent,_,files in os.walk(rpath):
+    for parent,_,files in os.walk(srcpath):
         for file in files:
             #, cv2.IMREAD_UNCHANGED
             src = cv2.imread(os.path.join(parent,file))
-            # result = morphologyEx(src)
-            # otsuresult = otsu(src)
+            result = morphologyEx(src)
+            # otsuresult = otsu(result)
             # cv2.imwrite(resultpath+"/otsu/"+file,otsuresult)
 
-            # iterresult = iters(src)
-            # cv2.imwrite(resultpath+"/iter/"+file,iterresult)
+            iterresult = iters(src)
+            cv2.imwrite(resultpath+"/iter/"+file,iterresult)
 
-            maxentropyresult = segment(src)
-            cv2.imwrite(resultpath+"/max/"+file,maxentropyresult)
+            # maxentropyresult = segment(src)
+            # cv2.imwrite(resultpath+"/max/"+file,maxentropyresult)
